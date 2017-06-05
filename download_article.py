@@ -3,7 +3,7 @@ import json
 import re
 import codecs
 import csv
-import pandas as pd
+# import pandas as pd
 
 def write_file(url):
     # TODO: Doesn't work yet
@@ -36,10 +36,10 @@ def main():
     with codecs.open(title,'w','utf-8') as f:
         f.write(result)
 
-    # You are now required to use pandas
-    df = pd.read_excel('all_articles.xlsx')
-    df = df.append({'title':title,'date':date,'content':content},ignore_index=True)
-    df.to_excel('all_articles.xlsx')
+    # # You are now required to use pandas
+    # df = pd.read_excel('all_articles.xlsx')
+    # df = df.append({'title':title,'date':date,'content':content},ignore_index=True)
+    # df.to_excel('all_articles.xlsx')
 
 
     # # Append file to master csv list 
