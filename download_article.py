@@ -15,7 +15,7 @@ def write_file(url):
 def main():
     # Open from file
     try:
-        with open('article.txt','r',encoding='utf-8') as f:
+        with codecs.open('article.txt','r',encoding='utf-8') as f:
             text = f.read()
     except:
         with open('article.txt','r') as f:
@@ -26,10 +26,12 @@ def main():
     title = js['result']['article']['title']
     content = js['result']['article']['translatedContent']
     content = re.sub(r'<.*?>','',content)
+    date = js['result']['article']['publishDate']
+    result = '\n'.join([title, date, content])
 
     # Save file
     with codecs.open(title,'w','utf-8') as f:
-        f.write(content)
+        f.write(result)
 
 
 if __name__=="__main__":
