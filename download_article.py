@@ -2,6 +2,8 @@
 import json
 import re
 import codecs
+import csv
+import pandas as pd
 
 def write_file(url):
     # TODO: Doesn't work yet
@@ -27,12 +29,31 @@ def main():
     content = js['result']['article']['translatedContent']
     content = re.sub(r'<.*?>','',content)
     date = js['result']['article']['publishDate']
-    result = '\n'.join([title, date, content])
+    row = [title, date, content]
+    result = u'\n'.join(row)
 
     # Save file
     with codecs.open(title,'w','utf-8') as f:
         f.write(result)
 
+    # You are now required to use pandas
+    df = pd.read_excel('all_articles.xlsx')
+    df = df.append({'title':title,'date':date,'content':content},ignore_index=True)
+    df.to_excel('all_articles.xlsx')
+
+
+    # # Append file to master csv list 
+    # # This works, and is how you should save utf-8 as csv files 
+    try:
+        with open('all_articles.csv','ab') as f:
+            writer = csv.writer(f)
+            writer.writerow([r.encode('utf8') for r in row])
+    except:
+        with open('all_articles.csv','wb') as f:
+            f.write(u'\ufeff'.encode('utf8'))
+            writer = csv.writer(f)
+            writer.writerow([u'title',u'date',u'content'])
+            writer.writerow([r.encode('utf8') for r in row])
 
 if __name__=="__main__":
     main()
