@@ -3,7 +3,22 @@ import json
 import re
 import codecs
 import csv
+import unicodedata
 # import pandas as pd
+
+def slugify(value, allow_unicode=True):
+    """
+    Convert to ASCII if 'allow_unicode' is False. Convert spaces to hyphens.
+    Remove characters that aren't alphanumerics, underscores, or hyphens.
+    Convert to lowercase. Also strip leading and trailing whitespace.
+    """
+    # value = str(value)
+    if allow_unicode:
+        value = unicodedata.normalize('NFKC', value)
+    else:
+        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    value = re.sub(r'[^\w\s-]', '', value).strip().lower()
+return mark_safe(re.sub(r'[-\s]+', '-', value))
 
 def write_file(url):
     # TODO: Doesn't work yet
@@ -22,6 +37,7 @@ def main():
     except:
         with open('article.txt','r') as f:
             text = f.read()
+    text = text.replace(u'\ufeff','')
 
     # Read and parse json
     js = json.loads(text)
@@ -33,7 +49,7 @@ def main():
     result = u'\n'.join(row)
 
     # Save file
-    with codecs.open(title,'w','utf-8') as f:
+    with codecs.open(slugify(title),'w','utf-8') as f:
         f.write(result)
 
     # # You are now required to use pandas
